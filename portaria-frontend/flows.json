@@ -1,0 +1,628 @@
+[
+    {
+        "id": "39d91580.fe1d32",
+        "type": "tab",
+        "label": "portariaVirtual",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "f9173916.f5fcc8",
+        "type": "http in",
+        "z": "39d91580.fe1d32",
+        "name": "",
+        "url": "/visita",
+        "method": "put",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 300,
+        "wires": [
+            [
+                "8335a00c.155fd8"
+            ]
+        ]
+    },
+    {
+        "id": "9ccb1a59.053dc8",
+        "type": "mongodb2 in",
+        "z": "39d91580.fe1d32",
+        "service": "_ext_",
+        "configNode": "bcee5022.d463",
+        "name": "",
+        "collection": "portariaVirtual",
+        "operation": "update",
+        "x": 1000,
+        "y": 300,
+        "wires": [
+            [
+                "b56bd533.7eb79"
+            ]
+        ]
+    },
+    {
+        "id": "d650b403.600388",
+        "type": "http response",
+        "z": "39d91580.fe1d32",
+        "name": "",
+        "x": 1770,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "5b8807b6.ec767",
+        "type": "function",
+        "z": "39d91580.fe1d32",
+        "name": "update request",
+        "func": "msg.result=msg.req.body;\ndelete msg.req.body._id;\nmsg.payload=[\n   msg.payload,\n   msg.req.body\n    ];\nreturn msg;\n\n",
+        "outputs": "1",
+        "noerr": 0,
+        "x": 680,
+        "y": 300,
+        "wires": [
+            [
+                "9ccb1a59.053dc8"
+            ]
+        ]
+    },
+    {
+        "id": "8335a00c.155fd8",
+        "type": "function",
+        "z": "39d91580.fe1d32",
+        "name": "extrair id",
+        "func": "msg._id=msg.payload._id;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 340,
+        "y": 300,
+        "wires": [
+            [
+                "e7766131.4c307"
+            ]
+        ]
+    },
+    {
+        "id": "3567d05.e4ed53",
+        "type": "template",
+        "z": "39d91580.fe1d32",
+        "name": "Cadastro visita",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<head>\n    <title>Portaria virtual</title>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">\n    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css\" />\n    <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js\"></script>\n    <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>\n    <link type=\"text/css\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css\" />\n    <link type=\"text/css\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css\" />\n    <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js\"></script>\n\n    <script type=\"text/javascript\">\n        $(function () {\n            var db = {{#payload}}{{{.}}}{{/payload}};\n                $(\"#jsgrid\").jsGrid({\n                    width: \"100%\",\n                    inserting: true,\n                    editing: false,\n                    sorting: true,\n                    paging: true,\n\n                    data: db,\n\n                    fields: [\n                        { title:\"Nome\", name: \"nome\", type: \"text\", width: 50 },\n                        { title:\"Email\", name: \"email\", type: \"text\", width: 50 },\n                        { title:\"Email de aviso\", name: \"aviso\", type: \"text\", width: 50 },\n                        { type: \"control\" }\n                    ],\n               \n                    controller: {\n                        insertItem: function(item) {\n                            return $.ajax({\n                                type: \"POST\",\n                                url: \"/visita\",\n                                data: item\n                            });\n                        },\n                        deleteItem: function(item) {\n                            return $.ajax({\n                                type: \"DELETE\",\n                                url: \"/visita\",\n                                data: item\n                            });\n                        }\n                    }   \n                });\n            });\n    \n  </script>\n</head>\n<body class=\"container\">\n    <section class=\"row\">\n        \n        <div class=\"col-md-6\"></div>\n        <div class=\"col-md-6\" id=\"jsgrid\">\n        </div>\n    </section>\n</body>\n</html>\n\n",
+        "x": 1560,
+        "y": 180,
+        "wires": [
+            [
+                "fceb4142.ee5aa"
+            ]
+        ]
+    },
+    {
+        "id": "85ac6d3b.c40658",
+        "type": "http in",
+        "z": "39d91580.fe1d32",
+        "name": "",
+        "url": "/visita",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 180,
+        "wires": [
+            [
+                "d7e39bf0.db727"
+            ]
+        ]
+    },
+    {
+        "id": "fceb4142.ee5aa",
+        "type": "http response",
+        "z": "39d91580.fe1d32",
+        "name": "",
+        "x": 1770,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "d7e39bf0.db727",
+        "type": "mongodb2 in",
+        "z": "39d91580.fe1d32",
+        "service": "_ext_",
+        "configNode": "bcee5022.d463",
+        "name": "",
+        "collection": "portariaVirtual",
+        "operation": "find.toArray",
+        "x": 1010,
+        "y": 180,
+        "wires": [
+            [
+                "868482cc.cea1a"
+            ]
+        ]
+    },
+    {
+        "id": "868482cc.cea1a",
+        "type": "json",
+        "z": "39d91580.fe1d32",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1350,
+        "y": 180,
+        "wires": [
+            [
+                "3567d05.e4ed53"
+            ]
+        ]
+    },
+    {
+        "id": "b56bd533.7eb79",
+        "type": "function",
+        "z": "39d91580.fe1d32",
+        "name": "callback response",
+        "func": "msg.payload=msg.result;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1390,
+        "y": 300,
+        "wires": [
+            [
+                "d650b403.600388"
+            ]
+        ]
+    },
+    {
+        "id": "54d59b4e.776d94",
+        "type": "mongodb2 in",
+        "z": "39d91580.fe1d32",
+        "service": "_ext_",
+        "configNode": "bcee5022.d463",
+        "name": "",
+        "collection": "portariaVirtual",
+        "operation": "insert",
+        "x": 990,
+        "y": 420,
+        "wires": [
+            [
+                "7f30c441.09af54",
+                "7a792a25.58ff5c"
+            ]
+        ]
+    },
+    {
+        "id": "29919bc9.108754",
+        "type": "http response",
+        "z": "39d91580.fe1d32",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1770,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "3c7e9cda.913774",
+        "type": "http in",
+        "z": "39d91580.fe1d32",
+        "name": "",
+        "url": "/visita",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 420,
+        "wires": [
+            [
+                "7e4925c7.a8ae5c"
+            ]
+        ]
+    },
+    {
+        "id": "b60e538d.54511",
+        "type": "http in",
+        "z": "39d91580.fe1d32",
+        "name": "",
+        "url": "/visita",
+        "method": "delete",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 540,
+        "wires": [
+            [
+                "20a8ae14.35dc32"
+            ]
+        ]
+    },
+    {
+        "id": "de5564cd.95d5e8",
+        "type": "mongodb2 in",
+        "z": "39d91580.fe1d32",
+        "service": "_ext_",
+        "configNode": "bcee5022.d463",
+        "name": "",
+        "collection": "portariaVirtual",
+        "operation": "deleteOne",
+        "x": 1010,
+        "y": 540,
+        "wires": [
+            [
+                "da427d88.5d6b6"
+            ]
+        ]
+    },
+    {
+        "id": "20a8ae14.35dc32",
+        "type": "function",
+        "z": "39d91580.fe1d32",
+        "name": "extrair id",
+        "func": "msg._id=msg.payload._id;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 340,
+        "y": 540,
+        "wires": [
+            [
+                "49dddb61.5d690c"
+            ]
+        ]
+    },
+    {
+        "id": "da427d88.5d6b6",
+        "type": "http response",
+        "z": "39d91580.fe1d32",
+        "name": "",
+        "x": 1730,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "7f30c441.09af54",
+        "type": "function",
+        "z": "39d91580.fe1d32",
+        "name": "preparacao email para visitante",
+        "func": "//msg.payload=msg.req.body;\nmsg.topic=msg.registro.nome+\", sua visita está liberada\";\nmsg.to=msg.registro.email;\nmsg.payload=\"Ao chegar em nossa recepção, acesse nosso wifi e clique no link: <br> \";\nmsg.payload=msg.payload+\"<a href=http://127.0.0.1/visitante/\"+msg.registro.chave+\"/\"+msg.registro._id+\">Registrar presença</a>\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1430,
+        "y": 420,
+        "wires": [
+            [
+                "29919bc9.108754",
+                "ff5b3b09.01c67"
+            ]
+        ]
+    },
+    {
+        "id": "e7766131.4c307",
+        "type": "objectid",
+        "z": "39d91580.fe1d32",
+        "name": "",
+        "x": 500,
+        "y": 300,
+        "wires": [
+            [
+                "5b8807b6.ec767"
+            ]
+        ]
+    },
+    {
+        "id": "49dddb61.5d690c",
+        "type": "objectid",
+        "z": "39d91580.fe1d32",
+        "name": "",
+        "x": 500,
+        "y": 540,
+        "wires": [
+            [
+                "de5564cd.95d5e8"
+            ]
+        ]
+    },
+    {
+        "id": "ff5b3b09.01c67",
+        "type": "e-mail",
+        "z": "39d91580.fe1d32",
+        "server": "smtp.gmail.com",
+        "port": "587",
+        "secure": false,
+        "name": "",
+        "dname": "enviar email",
+        "x": 1790,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "ff3a57cc.b294c",
+        "type": "mongodb2 in",
+        "z": "39d91580.fe1d32",
+        "service": "_ext_",
+        "configNode": "bcee5022.d463",
+        "name": "",
+        "collection": "portariaVirtual",
+        "operation": "findOne",
+        "x": 1000,
+        "y": 660,
+        "wires": [
+            [
+                "a2ede32c.e1c1b8"
+            ]
+        ]
+    },
+    {
+        "id": "76f2b9f7.cf0a7",
+        "type": "http in",
+        "z": "39d91580.fe1d32",
+        "name": "",
+        "url": "/registro/:chave/:id",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 660,
+        "wires": [
+            [
+                "9f9fe3e8.afdd"
+            ]
+        ]
+    },
+    {
+        "id": "9f9fe3e8.afdd",
+        "type": "function",
+        "z": "39d91580.fe1d32",
+        "name": "extrair id",
+        "func": "msg.payload._id = msg.req.params.id;\nmsg.payload.chave = msg.req.params.chave;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 380,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2b785d49.93f5d2",
+        "type": "objectid",
+        "z": "39d91580.fe1d32",
+        "name": "",
+        "x": 580,
+        "y": 660,
+        "wires": [
+            [
+                "ff3a57cc.b294c"
+            ]
+        ]
+    },
+    {
+        "id": "7e4925c7.a8ae5c",
+        "type": "random",
+        "z": "39d91580.fe1d32",
+        "name": "gera chave",
+        "low": "10000",
+        "high": "99999",
+        "inte": "true",
+        "property": "payload",
+        "x": 350,
+        "y": 420,
+        "wires": [
+            [
+                "b06d55c9.ec035"
+            ]
+        ]
+    },
+    {
+        "id": "b06d55c9.ec035",
+        "type": "function",
+        "z": "39d91580.fe1d32",
+        "name": "inject chave",
+        "func": "msg.payload = {\n    nome : msg.req.body.nome,\n    email : msg.req.body.email,\n    aviso : msg.req.body.aviso,\n    chave : \"_\"+msg.payload\n    \n};\n\nmsg.registro = msg.payload;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 670,
+        "y": 420,
+        "wires": [
+            [
+                "54d59b4e.776d94"
+            ]
+        ]
+    },
+    {
+        "id": "a2ede32c.e1c1b8",
+        "type": "switch",
+        "z": "39d91580.fe1d32",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "null"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 1350,
+        "y": 660,
+        "wires": [
+            [
+                "691c01ba.7f4778"
+            ],
+            [
+                "69bb6cd0.cd3e3c",
+                "1a34fae4.15a975"
+            ]
+        ]
+    },
+    {
+        "id": "691c01ba.7f4778",
+        "type": "function",
+        "z": "39d91580.fe1d32",
+        "name": "visitante desconhecido",
+        "func": "msg.payload = {\n    mensagem : \"Visitante desconhecido\",\n    codigo : \"99\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1590,
+        "y": 640,
+        "wires": [
+            [
+                "c12ca25d.8ecf3"
+            ]
+        ]
+    },
+    {
+        "id": "69bb6cd0.cd3e3c",
+        "type": "function",
+        "z": "39d91580.fe1d32",
+        "name": "visitante liberado",
+        "func": "msg.payload = {\n    mensagem : \"Visitante liberado\",\n    codigo : \"01\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1570,
+        "y": 800,
+        "wires": [
+            [
+                "db2267c8.faa38"
+            ]
+        ]
+    },
+    {
+        "id": "db2267c8.faa38",
+        "type": "mqtt out",
+        "z": "39d91580.fe1d32",
+        "name": "",
+        "topic": "portariaVirtual",
+        "qos": "0",
+        "retain": "false",
+        "broker": "a2aa876f.274b7",
+        "x": 1900,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "c9e02c33.80b368",
+        "type": "mqtt in",
+        "z": "39d91580.fe1d32",
+        "name": "recebe aviso de visitante",
+        "topic": "registroVisitante",
+        "qos": "0",
+        "broker": "a2aa876f.274b7",
+        "x": 170,
+        "y": 820,
+        "wires": [
+            [
+                "cbc5f29c.2654c8"
+            ]
+        ]
+    },
+    {
+        "id": "cbc5f29c.2654c8",
+        "type": "json",
+        "z": "39d91580.fe1d32",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 390,
+        "y": 820,
+        "wires": [
+            [
+                "2b785d49.93f5d2"
+            ]
+        ]
+    },
+    {
+        "id": "1a34fae4.15a975",
+        "type": "function",
+        "z": "39d91580.fe1d32",
+        "name": "preparaçao email para host",
+        "func": "//msg.payload=msg.req.body;\nmsg.topic=\"Sua visita chegou\";\nmsg.to=msg.payload.aviso;\nmsg.payload=\"Informamos que o visitante, \"+msg.payload.nome+\", chegou.\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1600,
+        "y": 720,
+        "wires": [
+            [
+                "2e60796.24fe906"
+            ]
+        ]
+    },
+    {
+        "id": "2e60796.24fe906",
+        "type": "e-mail",
+        "z": "39d91580.fe1d32",
+        "server": "smtp.gmail.com",
+        "port": "587",
+        "secure": false,
+        "name": "",
+        "dname": "Enviar email",
+        "x": 1890,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "7a792a25.58ff5c",
+        "type": "function",
+        "z": "39d91580.fe1d32",
+        "name": "preparacao email para host",
+        "func": "msg.topic=\"Email enviado para sua visita\";\nmsg.to=msg.registro.aviso;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1420,
+        "y": 480,
+        "wires": [
+            [
+                "ff5b3b09.01c67"
+            ]
+        ]
+    },
+    {
+        "id": "c12ca25d.8ecf3",
+        "type": "e-mail",
+        "z": "39d91580.fe1d32",
+        "server": "smtp.gmail.com",
+        "port": "587",
+        "secure": false,
+        "name": "welder.kopti@gmail.com",
+        "dname": "Enviar email seguranca",
+        "x": 1930,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "bcee5022.d463",
+        "type": "mongodb2",
+        "z": "",
+        "uri": "mongodb://portaria-database:27017",
+        "name": "",
+        "options": "",
+        "parallelism": "-1"
+    },
+    {
+        "id": "a2aa876f.274b7",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "",
+        "broker": "portaria-mqtt",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    }
+]
