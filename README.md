@@ -4,6 +4,7 @@ Trabalho IOT
 INSTALACAO PORTARIA VIRTUAL
 
 1-) docker-compose build
+
 2-) docker-compose up
 3-) acessar o node-red da portaria virtual, na porta 1880
 4-) configurar os nós:
