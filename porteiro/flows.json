@@ -1,0 +1,272 @@
+[
+    {
+        "id": "43be0b1a.38ec44",
+        "type": "tab",
+        "label": "porteiro",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "85f74985.693238",
+        "type": "mqtt in",
+        "z": "43be0b1a.38ec44",
+        "name": "",
+        "topic": "portariaVirtual",
+        "qos": "1",
+        "broker": "b47b4049.ed2a9",
+        "x": 139,
+        "y": 312,
+        "wires": [
+            [
+                "e1f3c547.805708",
+                "8b0c3fd2.f9e05",
+                "178c2074.1a591"
+            ]
+        ]
+    },
+    {
+        "id": "541f5b7e.2b8654",
+        "type": "http in",
+        "z": "43be0b1a.38ec44",
+        "name": "",
+        "url": "/visitante/:chave/:id",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 179,
+        "y": 72,
+        "wires": [
+            [
+                "9da3207e.a19a1"
+            ]
+        ]
+    },
+    {
+        "id": "55f7a7d.29b4358",
+        "type": "mqtt out",
+        "z": "43be0b1a.38ec44",
+        "name": "",
+        "topic": "registroVisitante",
+        "qos": "0",
+        "retain": "false",
+        "broker": "b47b4049.ed2a9",
+        "x": 649,
+        "y": 192,
+        "wires": []
+    },
+    {
+        "id": "a7e395ed.9f54f8",
+        "type": "http response",
+        "z": "43be0b1a.38ec44",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1179,
+        "y": 72,
+        "wires": []
+    },
+    {
+        "id": "9da3207e.a19a1",
+        "type": "function",
+        "z": "43be0b1a.38ec44",
+        "name": "extrair id",
+        "func": "msg.payload._id = msg.req.params.id;\nmsg.payload.chave = msg.req.params.chave;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 409,
+        "y": 72,
+        "wires": [
+            [
+                "55f7a7d.29b4358",
+                "95cbeb5f.80bba8"
+            ]
+        ]
+    },
+    {
+        "id": "95cbeb5f.80bba8",
+        "type": "objectid",
+        "z": "43be0b1a.38ec44",
+        "name": "",
+        "x": 629,
+        "y": 72,
+        "wires": [
+            [
+                "8bcda307.bf0ac"
+            ]
+        ]
+    },
+    {
+        "id": "8bcda307.bf0ac",
+        "type": "function",
+        "z": "43be0b1a.38ec44",
+        "name": "formata retorno",
+        "func": "msg.payload = {\n    mensagem : \"Presença registrada\",\n    codigo : \"01\"\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 809,
+        "y": 72,
+        "wires": [
+            [
+                "5d37c287.05d42c"
+            ]
+        ]
+    },
+    {
+        "id": "5d37c287.05d42c",
+        "type": "template",
+        "z": "43be0b1a.38ec44",
+        "name": "Cadastro visita",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<head>\n    <title>Portaria virtual</title>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<body class=\"container\">\n    <section class=\"row\">\n        <div class=\"col-md-6\">Presença registrada</div>\n        </div>\n    </section>\n</body>\n</html>\n\n",
+        "x": 1009,
+        "y": 72,
+        "wires": [
+            [
+                "a7e395ed.9f54f8"
+            ]
+        ]
+    },
+    {
+        "id": "fb50c003.25428",
+        "type": "arduino out",
+        "z": "43be0b1a.38ec44",
+        "name": "LED",
+        "pin": "13",
+        "state": "OUTPUT",
+        "arduino": "21d5206b.78b08",
+        "x": 694,
+        "y": 396,
+        "wires": []
+    },
+    {
+        "id": "e1f3c547.805708",
+        "type": "function",
+        "z": "43be0b1a.38ec44",
+        "name": "liga led",
+        "func": "msg.payload = 1;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 379,
+        "y": 395,
+        "wires": [
+            [
+                "fb50c003.25428"
+            ]
+        ]
+    },
+    {
+        "id": "8b0c3fd2.f9e05",
+        "type": "delay",
+        "z": "43be0b1a.38ec44",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 313,
+        "y": 514,
+        "wires": [
+            [
+                "792fccb1.f37884",
+                "59d66b80.3e2b64"
+            ]
+        ]
+    },
+    {
+        "id": "792fccb1.f37884",
+        "type": "function",
+        "z": "43be0b1a.38ec44",
+        "name": "desliga led",
+        "func": "msg.payload = 0;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 489,
+        "y": 514,
+        "wires": [
+            [
+                "fb50c003.25428"
+            ]
+        ]
+    },
+    {
+        "id": "214437dd.19be18",
+        "type": "arduino out",
+        "z": "43be0b1a.38ec44",
+        "name": "SERVO",
+        "pin": "7",
+        "state": "SERVO",
+        "arduino": "21d5206b.78b08",
+        "x": 890,
+        "y": 325,
+        "wires": []
+    },
+    {
+        "id": "178c2074.1a591",
+        "type": "function",
+        "z": "43be0b1a.38ec44",
+        "name": "destrava porta",
+        "func": "msg.payload = 0;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 398,
+        "y": 325,
+        "wires": [
+            [
+                "214437dd.19be18"
+            ]
+        ]
+    },
+    {
+        "id": "59d66b80.3e2b64",
+        "type": "function",
+        "z": "43be0b1a.38ec44",
+        "name": "trava porta",
+        "func": "msg.payload = 90;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 634,
+        "y": 628,
+        "wires": [
+            [
+                "214437dd.19be18"
+            ]
+        ]
+    },
+    {
+        "id": "b47b4049.ed2a9",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "21d5206b.78b08",
+        "type": "arduino-board",
+        "z": "",
+        "device": "COM3"
+    }
+]
